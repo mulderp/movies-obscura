@@ -24,6 +24,8 @@ module.exports = function (grunt) {
         dist: 'dist'
     };
 
+    var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
+
     grunt.initConfig({
         yeoman: yeomanConfig,
         watch: {
@@ -70,6 +72,7 @@ module.exports = function (grunt) {
                 options: {
                     middleware: function (connect) {
                         return [
+                            proxySnippet,
                             lrSnippet,
                             mountFolder(connect, '.tmp'),
                             mountFolder(connect, yeomanConfig.app)
@@ -77,6 +80,22 @@ module.exports = function (grunt) {
                     }
                 }
             },
+            proxies: [
+                  {
+                      context: '/movies',
+                      host: '0.0.0.0',
+                      port: 5000,
+                      https: false,
+                      changeOrigin: false
+                  },
+                  {
+                      context: '/genres',
+                      host: '0.0.0.0',
+                      port: 5000,
+                      https: false,
+                      changeOrigin: false
+                  }
+            ],
             test: {
                 options: {
                     middleware: function (connect) {
@@ -304,6 +323,7 @@ module.exports = function (grunt) {
         }
 
         grunt.task.run([
+            'configureProxies',
             'clean:server',
             'coffee:dist',
             'createDefaultTemplate',

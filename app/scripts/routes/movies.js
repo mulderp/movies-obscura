@@ -3,10 +3,10 @@
 define([
     'jquery',
     'backbone',
-    'collections/ratings',
+    'collections/movies',
     'views/filterUI',
     'views/moviesUI',
-], function ($, Backbone, Ratings, FilterUI, MoviesUI) {
+], function ($, Backbone, Movies, FilterUI, MoviesUI) {
     'use strict';
 
     var MoviesRouter = Backbone.Router.extend({
@@ -16,10 +16,9 @@ define([
         },
 
         index: function() {
-            console.log('****');
-            var ratings = new Ratings([1,2,3,4,5]);
-            var filterUI = new FilterUI({el: '#filter', collection: ratings});
-            var moviesUI = new MoviesUI();
+            var movies = new Movies();
+            this.filterUI = new FilterUI({el: '#filter'});
+            this.moviesUI = new MoviesUI({el: '#movies', collection: movies});
         },
 
         showMovie: function() {

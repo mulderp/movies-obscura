@@ -13,12 +13,48 @@
         <link rel="stylesheet" href="styles/main.css">
     </head>
     <body>
+      <header>
+        <div class="home"><a href="/">Munich Cinema</a></div>
+        <nav>
+        </nav>
+      </header>
       <aside id="filter" class="sidebar">
-
       </aside>
 
-        <!-- build:js scripts/main.js -->
-        <script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
-        <!-- endbuild -->
+      <div class="content">
+        <div class="header">
+          <h2>Upcoming Movies</h2>
+            <nav id="controls" class="controls">
+              <div id="paginate">
+                <a href="#" class="previous" id="previous">Previous</a> | 
+                <a href="#" class="next" id="next">Next</a>
+              </div>
+              <div id="sorting" class="sort">
+                <span>Sort Movies</span>
+                <ul>
+                  <li><a href="#" class="" id="by_title">By Title</a></li>
+                  <li><a href="#" class="" id="by_showtime">By Showtime</a></li>
+                  <li><a href="#" class="" id="by_rating">By Rating</a></li>
+                </ul>
+              </div>
+            </nav>
+        </div>
+
+        <div id="movies" class="movies">
+          <article class="movie selected" data-id="12" data-year="2011">
+            <h3>The Artist</h3>
+          </article>
+          <article class="movie" data-id="5" data-year="1974">
+            <h3>Taxi Driver</h3>
+          </article>
+          <article class="movie" data-id="7" data-year="1964">
+            <h3>La Dolce Vita</h3>
+          </article>
+        </div>
+     </div>
+
+     <!-- build:js scripts/main.js -->
+     <script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
+     <!-- endbuild -->
 </body>
 </html>

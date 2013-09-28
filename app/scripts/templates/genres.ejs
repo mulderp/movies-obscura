@@ -1,11 +1,11 @@
-  <h4>Genre</h4>
-  <hr>
-   <ul class="filter-genres">
-     <li>
-       <label for='genre-all'>
-          All Categories
-       </label>
-       <input type="checkbox" name="genre-all" />
-     </li>
-    </ul>
-  <br/>
+<h4>Genre</h4>
+<hr>
+ <ul class="filter-genres">
+    <li><input type="checkbox">All categories</input></li>
+    <% _.each(genres, function(genre) { %>
+      <li><input type="checkbox" value='<%= genre.id %>'>
+      <%= genre.name %>
+      </input>
+      </li>
+    <% }) %>
+  </ul>
