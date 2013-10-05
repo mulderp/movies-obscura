@@ -16,7 +16,6 @@ define([
       template: JST['app/scripts/templates/moviesUI.ejs'],
 
       render: function() {
-        console.log("***");
         var moviesView = this.proxy.map(function(movie) {
           return (new MovieView({model : movie})).render().el;
         });
@@ -39,17 +38,33 @@ define([
 
       selectRating: function(stars) {
         var filters = _.keys(this.proxy._filtered._filters);
-        var ratingfilter = "rating:" + stars;
-        console.log(ratingfilter);
-        if (_.contains(filters, ratingfilter)){ 
-          this.proxy.removeFilter(ratingfilter);
+        this.proxy.ratings = this.proxy.ratings || [];
+        var ratings = this.proxy.ratings;
+
+        // check if ratings filter contains rating
+        if (_.contains(ratings, parseInt(stars))){ 
+          ratings = _.without(ratings, parseInt(stars));
         }
         else
         {
-          this.proxy.filterBy(ratingfilter, function(model) { 
-            return model.get('rating') == parseInt(stars);
+          // store rating in Array
+          this.proxy.ratings.unshift(parseInt(stars));
+        }
+
+        // filter array
+        if (ratings.length === 0) {
+          // remove rating filter if there is no rating
+          this.proxy.removeFilter('ratings');
+        }
+        else {
+          this.proxy.filterBy("ratings", { rating: function(val) { 
+              return _.contains(ratings, val);
+            }
           });
         }
+
+        // store ratings on proxy
+        this.proxy.ratings = ratings;
       },
 
       sort: function(criteria) {
@@ -66,6 +81,7 @@ define([
       },
 
       initialize: function() {
+        _.bindAll(this, 'selectRating');
         this.proxy = new Obscura(this.collection);
         this.proxy.setPerPage(4)
               .setSort('showtime', 'desc');
