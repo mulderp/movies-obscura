@@ -4,21 +4,25 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'collectionview',
     'channel',
     'collections/genres',
+    'views/filterItem',
     'templates'
-], function ($, _, Backbone, channel, Genres, JST) {
+], function ($, _, Backbone, CollectionView, channel, Genres, filterItem, JST) {
     'use strict';
 
-    var GenresView = Backbone.View.extend({
-        template: JST['app/scripts/templates/genres.ejs'],
+    var GenresView = Backbone.CollectionView.extend({
+        //template: JST['app/scripts/templates/genres.ejs'],
+        el: $("ul#genres"),
+        itemView: filterItem,
         events: {
           'click input': 'selectGenre'
         },
 
         selectGenre: function(ev) {
           var id = $(ev.currentTarget).val();
-          var genre = this.genres.findWhere({id: parseInt(id)});
+          var genre = this.collection.get({id: parseInt(id)});
           if (genre != undefined) {
             var filter = genre.get('name');
             channel.trigger('genres:select', filter);
@@ -31,14 +35,14 @@ define([
         },
 
         render: function() {
-          var tmpl = this.template({genres: this.genres.toJSON()});
+          var data = this.collection.toJSON();
+          var tmpl = this.template({genres: data});
           return $(this.el).html(tmpl);
         },
 
         initialize: function() {
-          this.genres = new Genres();
-          this.listenTo(this.genres, "sync", this.render);
-          this.genres.fetch();
+          this.listenTo(this.collection, "sync", this.render);
+          this.collection.fetch();
         }
     });
 

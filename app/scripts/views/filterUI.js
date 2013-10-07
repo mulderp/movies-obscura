@@ -4,12 +4,13 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'collections/genres',
     'views/ratings',
     'views/genres',
     'views/sortUI',
     'views/paginate',
     'templates'
-], function ($, _, Backbone, RatingsUI, GenresUI, SortUI, Paginate, JST) {
+], function ($, _, Backbone, Genres, RatingsUI, GenresUI, SortUI, Paginate, JST) {
     'use strict';
 
     var FilteruiView = Backbone.View.extend({
@@ -20,7 +21,7 @@ define([
 
         var filter = $(this.el).html(layout);
         $(this.el).find('#ratings').append(this.ratings.render());
-        $(this.el).find('#genres').append(this.genres.render());
+        //$(this.el).find('#genres').append(this.genres.render());
         this.sort.setElement("#sorting");
         this.paginate.setElement("#paginate");
         return filter;
@@ -28,10 +29,11 @@ define([
 
       initialize: function() {
         this.ratings = new RatingsUI();
-        this.genres = new GenresUI();
+        var genres = new Genres();
         this.sort = new SortUI();
         this.paginate = new Paginate();
         this.render();
+        this.genres = new GenresUI({collection: genres, el: $(this.el).find("#genres")});
       }
 
     });

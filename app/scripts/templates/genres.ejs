@@ -3,9 +3,9 @@
  <ul class="filter-genres">
     <li><input type="checkbox">All categories</input></li>
     <% _.each(genres, function(genre) { %>
-      <li><input type="checkbox" value='<%= genre.id %>'>
+      <li><a href="#" class="<%= helpers.selected() %>" data-value='<%= genre.id %>'>
       <%= genre.name %>
-      </input>
+      </a>
       </li>
     <% }) %>
   </ul>
