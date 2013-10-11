@@ -3,7 +3,11 @@
   "version": "0.0.0",
   "dependencies": {
     "underscore": "1.5.1",
-    "restify": "latest"
+    "restify": "latest",
+    "async": "latest",
+    "hiredis": "latest",
+    "redis": "latest",
+    "crypto": "latest"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

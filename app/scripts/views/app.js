@@ -14,8 +14,8 @@ define([
     var AppView = Backbone.View.extend({
         template: JST['app/scripts/templates/app.ejs'],
         events: {
-          'click #login': 'login',
-          'click #join': 'join'
+          'click .login': 'login',
+          'click .join': 'join'
         },
         login: function(ev) {
           ev.preventDefault();

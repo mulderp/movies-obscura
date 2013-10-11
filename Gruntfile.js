@@ -94,6 +94,13 @@ module.exports = function (grunt) {
                       port: 5000,
                       https: false,
                       changeOrigin: false
+                  },
+                  {
+                      context: '/auth',
+                      host: '0.0.0.0',
+                      port: 5000,
+                      https: false,
+                      changeOrigin: false
                   }
             ],
             test: {
