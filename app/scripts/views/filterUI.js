@@ -34,6 +34,7 @@ define([
         this.paginate = new Paginate();
         this.render();
         this.genres = new GenresUI({collection: genres, el: $(this.el).find("#genres")});
+        genres.fetch();
       }
 
     });

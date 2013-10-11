@@ -19,7 +19,7 @@ require.config({
         backbone: '../bower_components/backbone/backbone',
         underscore: '../bower_components/underscore/underscore',
         obscura: '../bower_components/backbone.obscura/backbone.obscura',
-        collectionview: '../bower_components/backbone.collectionview/backbone.collectionview'
+        collectionview: '../bower_components/backbone.collectionView/dist/backbone.collectionView'
     }
 });
 
