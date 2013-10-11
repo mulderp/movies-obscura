@@ -1,3 +1,5 @@
+@import './modal.css.scss';
+
 .movie {
     float: left;
     width: 160px;
@@ -118,6 +120,10 @@ header {
       text-decoration: none;
       padding: 5px;
       margin: 5px;
+    }
+
+    nav {
+      float: right;
     }
 
 }

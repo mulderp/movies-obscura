@@ -19,6 +19,7 @@ require.config({
         backbone: '../bower_components/backbone/backbone',
         underscore: '../bower_components/underscore/underscore',
         obscura: '../bower_components/backbone.obscura/backbone.obscura',
+        backbone_modal: '../bower_components/backbone.ui.modal/assets/js/backbone.ui.modal',
         collectionview: '../bower_components/backbone.collectionView/dist/backbone.collectionView'
     }
 });

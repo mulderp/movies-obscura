@@ -9,6 +9,7 @@
     "requirejs-text": "~2.0.5",
     "modernizr": "~2.6.2",
     "backbone.obscura": "0.1.0",
+    "backbone.ui.modal": "latest",
     "font-awesome": "latest"
   },
   "devDependencies": {}
