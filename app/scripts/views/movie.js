@@ -5,8 +5,10 @@ define([
     'underscore',
     'backbone',
     'channel',
+    'models/session',
+    'views/like',
     'templates'
-], function ($, _, Backbone, channel, JST) {
+], function ($, _, Backbone, channel, session, LikeView, JST) {
     'use strict';
 
     var MovieView = Backbone.View.extend({
@@ -29,11 +31,16 @@ define([
         $(this.el).html(tmpl)
         $(this.el).attr('data-id', this.model.get('id'));
         this.$el.toggleClass('selected', this.model.get('selected'));
+        if (session.currentUser()) {
+          this.$el.append((new LikeView()).el);
+          console.log(session.currentUser().toJSON());
+        }
         return this;
       },
   
       initialize: function() {
         this.listenTo(this.model, 'change', this.render);
+        this.listenTo(channel, 'login:success', this.render);
       }
 
       });

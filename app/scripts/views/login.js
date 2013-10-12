@@ -5,9 +5,10 @@ define([
     'underscore',
     'backbone',
     'backbone_modal',
+    'channel',
     'models/session',
     'templates'
-], function ($, _, Backbone, BackboneModal, Session, JST) {
+], function ($, _, Backbone, BackboneModal, channel, session, JST) {
     'use strict';
 
     var LoginView = Backbone.UI.Modal.extend({
@@ -26,14 +27,16 @@ define([
        console.log(ev);
        var username = $('input[name=username]').val();
        var password = $('input[name=password]').val();
-       var session = new Session({username: username, password: password});
+       // var session = new Session({username: username, password: password});
        var self = this;
-       session.login(function(model, response) {
+       session.login(username, password, function(model, response) {
             console.log(response);
             self.clickClose();
+            channel.trigger('login:success');
           },
           function(model, response) {
             console.log(response);
+            channel.trigger('login:fail');
           }
        );
 

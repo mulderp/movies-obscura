@@ -25,8 +25,11 @@ require.config({
 });
 
 require([
-    'backbone', 'routes/movies'
-], function (Backbone, MoviesRouter) {
-    var router = new MoviesRouter();
-    Backbone.history.start();
+    'backbone', 'routes/movies', 'models/session'
+], function (Backbone, MoviesRouter, session) {
+
+    session.isValid(function() {
+      var router = new MoviesRouter();
+      Backbone.history.start();
+    });
 });
