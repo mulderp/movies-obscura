@@ -12,7 +12,8 @@ define([
         template: JST['app/scripts/templates/filterItem.ejs'],
         render: function() {
           console.log("********");
-          var tmpl = this.template();
+          console.log(this.model);
+          var tmpl = this.template({item: this.model.toJSON()});
           return $(this.el).html(tmpl);
         }
     });

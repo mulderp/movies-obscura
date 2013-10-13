@@ -112,6 +112,18 @@ server.get('/auth/session', function(req, res, next) {
   });
 });
 
+server.del('/auth/session', function(req, res, next) {
+  console.log("*** logout");
+  var cookies = get_cookies(req);
+  client.delAsync("auth:" + cookies.session).then(function() {
+    res.send(200);
+  }).catch(function(err) {
+    console.log(err);
+    res.send("500", {error: err});
+  });
+
+});
+
 function lookupUserId(username, cb, fail_cb) {
   client.getAsync("username.to.id:" + username.toLowerCase())
     .then(function(id) {

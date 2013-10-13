@@ -1,0 +1,11 @@
+        <% if (currentUser && currentUser.get('auth') === "OK") { %>
+        <nav>
+           <a href="#" class="logout">Logout</a>
+        </nav>
+        <% } else { %>
+        <nav>
+           <a href="#" class="login">Login</a> |
+           <a href="#" class="join">Join</a>
+        </nav>
+        <% } %>
+

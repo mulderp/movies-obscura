@@ -45,6 +45,14 @@ define([
           } else {
             return false; 
           }
+        },
+
+        logout: function() {
+          var self = this;
+          $.ajax({type: 'DELETE', dataType: 'json', 
+          contentType: "application/json", 
+          url: "/auth/session" })
+            .done(function(data) { console.log(data); self.user.set('auth', 'NOK'); }).fail();
         }
     });
       session = new SessionModel();
