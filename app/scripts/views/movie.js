@@ -41,6 +41,7 @@ define([
       initialize: function() {
         this.listenTo(this.model, 'change', this.render);
         this.listenTo(channel, 'login:success', this.render);
+        this.listenTo(channel, 'logout:success', this.render);
       }
 
       });

@@ -50,7 +50,7 @@ define([
         },
 
         currentUser: function() {
-          if (this.user) {
+          if (this.user && (this.user.get('auth') == 'OK')) {
             return this.user;
           } else {
             return false; 
@@ -64,8 +64,8 @@ define([
           url: "/auth/session" })
           .done(function(data) { 
             console.log(data); 
-            channel.trigger('logout:success');
             self.user.set('auth', 'NOK'); 
+            channel.trigger('logout:success');
           }).fail(function(resp, data) {
             console.log(resp);
             console.log(data);

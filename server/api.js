@@ -130,7 +130,7 @@ server.del('/auth/session', function(req, res, next) {
   console.log("*** logout");
   var cookies = get_cookies(req);
   client.delAsync("auth:" + cookies.session).then(function() {
-    res.send(200);
+    res.send(200, {auth: 'nok'});
   }).catch(function(err) {
     console.log(err);
     res.send("500", {error: err});
