@@ -32,11 +32,9 @@ define([
        session.login(username, password, function(model, response) {
             console.log(response);
             self.clickClose();
-            channel.trigger('login:success');
           },
           function(model, response) {
             console.log(response);
-            channel.trigger('login:fail');
           }
        );
 

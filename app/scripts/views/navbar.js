@@ -7,8 +7,9 @@ define([
     'models/session',
     'views/login',
     'views/join',
+    'channel',
     'templates'
-], function ($, _, Backbone, session, LoginView, JoinView,  JST) {
+], function ($, _, Backbone, session, LoginView, JoinView,  channel, JST) {
     'use strict';
 
     var NavbarView = Backbone.View.extend({
@@ -34,11 +35,13 @@ define([
       render: function() {
         console.log(session.currentUser());
         var tmpl = this.template({currentUser: session.currentUser()});
-        $(this.el).append(tmpl);
+        $(this.el).html(tmpl);
         return this;
       },
       initialize: function() {
         this.render();
+        this.listenTo(channel, 'login:success', this.render);
+        this.listenTo(channel, 'logout:success', this.render);
       }
     });
 
