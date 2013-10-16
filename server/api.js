@@ -163,16 +163,21 @@ server.post('/auth/session', function(req, res, next) {
   console.log(raw);
   console.log(raw.username);
   var key = get_rand();
-  lookupUserId(raw.username, function(userId) {
-    client.set("auth:" + key, userId);
-    res.header('Set-Cookie', 'session=' + key + '; HttpOnly');    
+  lookupUserId(raw.username, function(userId, username, email) {
+    if (userId != null) {
+      client.set("auth:" + key, userId);
+      res.header('Set-Cookie', 'session=' + key + '; HttpOnly');    
+      res.send({auth: 'OK', id: userId, username: username, email: email}); 
+      return;
+    } else {
+      res.send(401, {auth: 'NOK', error: {"username not found"}});
+    };
   }, function(err) {
-    console.log(err);
+    res.send(401, {auth: 'NOK'});
+    console.log("/auth/session: %", err);
+    return;
   });
 
-  lookupUserId(raw.username, function(id, username, email) {
-    res.send({auth: 'OK', id: id, username: username, email: email}); 
-  });
 });
 
 server.get('/auth/ping', function(req, res, next) {
