@@ -21,9 +21,9 @@ define([
       },
   
       handleClick: function(ev) {
+        ev.preventDefault();
         console.log('event on ' + this.model.id);
         channel.trigger('movie:selected', this.model.id);
-
       },
 
       render: function() {
