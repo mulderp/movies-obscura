@@ -76,7 +76,7 @@ function createUser(raw, success_cb, fail_cb) {
     }).catch(function(err){
       fail_cb(err);
     });
-};
+}
 
 
 server.post('/auth/create_user', function(req, res, next) {
@@ -164,14 +164,13 @@ server.post('/auth/session', function(req, res, next) {
   console.log(raw.username);
   var key = get_rand();
   lookupUserId(raw.username, function(userId, username, email) {
-    if (userId != null) {
+    if (userId !== null) {
       client.set("auth:" + key, userId);
       res.header('Set-Cookie', 'session=' + key + '; HttpOnly');    
       res.send({auth: 'OK', id: userId, username: username, email: email}); 
-      return;
     } else {
-      res.send(401, {auth: 'NOK', error: {"username not found"}});
-    };
+      res.send(401, {auth: 'NOK', error: "username not found"});
+    }
   }, function(err) {
     res.send(401, {auth: 'NOK'});
     console.log("/auth/session: %", err);
