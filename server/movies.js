@@ -1,3 +1,99 @@
+
+var fs = require('fs');
+var url = require('url');
+var _ = require('underscore');
+var querystring = require('querystring');
+
+var Promise = require("bluebird");
+//assume client is a redisClient
+
+// redis
+  var password, database;
+  var parsed_url  = url.parse(process.env.REDISTOGO_URL || 'redis://localhost:6379');
+  var parsed_auth = (parsed_url.auth || '').split(':');
+  var options = querystring.parse(parsed_url.query);
+
+  var client = require('redis').createClient(parsed_url.port, parsed_url.hostname, options);
+
+  if (password = parsed_auth[1]) {
+    client.auth(password, function(err) {
+      if (err) throw err;
+    });
+  }
+
+Promise.promisifyAll(client);
+
+
+function voteUp(movie) {
+  console.log("vote up");
+
+  return movie;
+}
+
+
+module.exports = {
+  importMovies: function(file) {
+    _.each(Movies, function(movie) {
+      var movieId;
+      client.incrAsync("movies.count")
+      .then(function(id) {
+        movieId = id;
+
+        // add movie
+        client.hmsetAsync(
+          'movies:' + id,
+          'title', movie.title,
+          'description', movie.description,
+          'year', movie.year,
+          'showtime', movie.showtime,
+          'genres', movie.genres,
+          'length', movie.length,
+          'director', movie.director,
+          'rating', 0
+        );
+
+        // add genres
+        _.each(movie.genres, function(genre) {
+          client.saddAsync(genre, movieId); 
+        });
+
+        // add ids
+        client.saddAsync('movies.ids', movieId); 
+      })
+      .then(function(result) {
+          console.log(movie);
+      });
+      console.log(movie);
+    });
+
+  },
+  allMovies: function() {
+    var movies, movieIds;
+    client.smembersAsync('movies.ids').then(function(ids) {
+      movieIds = ids;
+      movies =  _.map(movieIds, function(id) {
+         client.hmgetAsync("movies:" + id, 'title', 'description', 'director', 'year' ).then(function(data) {
+           return {
+                 title: data[0], 
+                 description: data[1], 
+                 director: data[2],
+                 year: data[3]
+               };
+          });
+        });
+      console.log(movies);
+    })
+    return movies;
+  },
+  voteUp: function(movie) {
+    return voteUp(movie);
+  }
+  
+
+}
+
+
+
 function rand(seed) {
   return Math.floor(Math.random()*seed);
 }

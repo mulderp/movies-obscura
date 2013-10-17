@@ -1,4 +1,6 @@
 var restify = require('restify');
+var movies = require('./movies.js');
+
 var _ = require('underscore');
 var fs = require('fs');
 var url = require('url');
@@ -18,8 +20,6 @@ var querystring = require('querystring');
     });
   }
 
-var movies = require('./movies.js');
-
 var server = restify.createServer({ name: 'movies' });
 var crypto = require('crypto');
 
@@ -27,13 +27,16 @@ var Promise = require("bluebird");
 //assume client is a redisClient
 Promise.promisifyAll(client);
 
+
+// server
 server
   .use(restify.fullResponse())
   .use(restify.bodyParser())
 
 
 server.get('/movies/top', function (req, res, next) {
-  res.send(Movies);
+  var movies = _.allMovies();
+  res.send(movies);
 })
 
 server.post('/movies/like', function(req, res, next) {
