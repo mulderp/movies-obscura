@@ -35,8 +35,7 @@ server
 
 
 server.get('/movies/top', function (req, res, next) {
-  var movies = _.allMovies();
-  res.send(movies);
+  movies.allMovies().then(function(m) { res.send(m); });
 })
 
 server.post('/movies/like', function(req, res, next) {

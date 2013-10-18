@@ -1,4 +1,6 @@
 
+//us = require('underscore'); m = require('./movies'); ma = m.allMovies()
+
 var fs = require('fs');
 var url = require('url');
 var _ = require('underscore');
@@ -68,11 +70,9 @@ module.exports = {
 
   },
   allMovies: function() {
-    var movies, movieIds;
-    client.smembersAsync('movies.ids').then(function(ids) {
-      movieIds = ids;
-      movies =  _.map(movieIds, function(id) {
-         client.hmgetAsync("movies:" + id, 'title', 'description', 'director', 'year' ).then(function(data) {
+    return client.smembersAsync('movies.ids').then(function(ids) {
+      var movies = _.map(ids, function(id) {
+         return client.hmgetAsync("movies:" + id, 'title', 'description', 'director', 'year').then(function(data) {
            return {
                  title: data[0], 
                  description: data[1], 
@@ -81,9 +81,8 @@ module.exports = {
                };
           });
         });
-      console.log(movies);
-    })
-    return movies;
+        return Promise.all(movies);
+      });
   },
   voteUp: function(movie) {
     return voteUp(movie);
