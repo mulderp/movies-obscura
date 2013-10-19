@@ -148,12 +148,12 @@ function lookupUserId(username, cb, fail_cb) {
   client.getAsync("username.to.id:" + username.toLowerCase())
     .then(function(id) {
       userId = id;
-      return client.hmgetAsync('user:' + id, 'username', 'email');
+      return client.hmgetAsync('user:' + id, 'username', 'email', 'password');
     }).then(function(data) {
-       cb(userId, data[0], data[1]);
-     }).catch(function(err) {
-       fail_cb(err); 
-     });
+       cb(userId, data[0], data[1], data[2]);
+    }).catch(function(err) {
+      fail_cb(err); 
+    });
 }
 
 function get_rand() {
@@ -169,8 +169,8 @@ server.post('/auth/session', function(req, res, next) {
   console.log(raw);
   console.log(raw.username);
   var key = get_rand();
-  lookupUserId(raw.username, function(userId, username, email) {
-    if (userId !== null) {
+  lookupUserId(raw.username, function(userId, username, email, password) {
+    if (userId !== null && raw.password === password) {
       client.set("auth:" + key, userId);
       res.header('Set-Cookie', 'session=' + key + '; HttpOnly');    
       res.send({auth: 'OK', id: userId, username: username, email: email}); 

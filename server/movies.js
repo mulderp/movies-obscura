@@ -15,28 +15,20 @@ var now = (typeof Date.now === 'function')? Date.now : function(){
 };
 
 // redis
-  var password, database;
-  var parsed_url  = url.parse(process.env.REDISTOGO_URL || 'redis://localhost:6379');
-  var parsed_auth = (parsed_url.auth || '').split(':');
-  var options = querystring.parse(parsed_url.query);
+var password, database;
+var parsed_url  = url.parse(process.env.REDISTOGO_URL || 'redis://localhost:6379');
+var parsed_auth = (parsed_url.auth || '').split(':');
+var options = querystring.parse(parsed_url.query);
 
-  var client = require('redis').createClient(parsed_url.port, parsed_url.hostname, options);
+var client = require('redis').createClient(parsed_url.port, parsed_url.hostname, options);
 
-  if (password = parsed_auth[1]) {
-    client.auth(password, function(err) {
-      if (err) throw err;
-    });
-  }
-
-Promise.promisifyAll(client);
-
-
-function voteUp(movie) {
-  console.log("vote up");
-
-  return movie;
+if (password = parsed_auth[1]) {
+  client.auth(password, function(err) {
+    if (err) throw err;
+  });
 }
 
+Promise.promisifyAll(client);
 
 module.exports = {
   importMovies: function(file) {
@@ -85,10 +77,13 @@ module.exports = {
           'rating'
         ).then(function(data) {
            return {
+                 id: id,
                  title: data[0], 
                  description: data[1], 
                  director: data[2],
-                 year: data[3]
+                 year: data[3],
+                 rating: data[4],
+                 showtime: now() + id * 3600
                };
           });
         });
