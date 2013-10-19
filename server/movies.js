@@ -8,6 +8,11 @@ var querystring = require('querystring');
 
 var Promise = require("bluebird");
 //assume client is a redisClient
+//
+
+var now = (typeof Date.now === 'function')? Date.now : function(){
+    return +(new Date());
+};
 
 // redis
   var password, database;
@@ -72,7 +77,13 @@ module.exports = {
   allMovies: function() {
     return client.smembersAsync('movies.ids').then(function(ids) {
       var movies = _.map(ids, function(id) {
-         return client.hmgetAsync("movies:" + id, 'title', 'description', 'director', 'year').then(function(data) {
+        return client.hmgetAsync("movies:" + id, 
+          'title', 
+          'description', 
+          'director', 
+          'year',
+          'rating'
+        ).then(function(data) {
            return {
                  title: data[0], 
                  description: data[1], 
@@ -84,11 +95,45 @@ module.exports = {
         return Promise.all(movies);
       });
   },
-  voteUp: function(movie) {
-    return voteUp(movie);
+  lookupUser: function(id) {
+    return client.hmgetAsync("user:" + id, 'username');
+  },
+  lookupMovie: function(id) {
+    return client.hmgetAsync("movies:" + id, 'title');
+  },
+  computeScore: function(id) {
+    var upvotes, downvotes;
+    return client.zrangeAsync("movies.up:" + id, 0, -1, 'withscores')
+      .then(function(scores) { 
+        upvotes = scores;
+        return client.zrangeAsync("movies.down:" + id, 0, -1, 'withscores')
+          .then(function(scores) {
+            downvotes = scores;
+            var votes = upvotes.length/2 + downvotes.length/2;
+            console.log(votes);
+            return votes;
+          });
+      })
+    .catch(function(m) { console.log(m) });
+  },
+  voteUp: function(id, userId) {
+    var self = this;
+    return this.lookupMovie(id).then(function(movie) {
+      return self.lookupUser(userId).then(function(data) {
+        if (data[0] === null) {
+          throw "No user";
+        }
+        if (client.zadd("movies.up:" + id, now(), userId)) {
+          return client.hincrbyAsync("movies:" + id, 'voteUp', 1).then(function() {
+            self.computeScore(id).then(function(score) {
+              console.log(score);
+              client.hset("movies:" + id, "rating", score); 
+            });
+          });
+        }
+      });
+    })
   }
-  
-
 }
 
 

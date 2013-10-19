@@ -35,12 +35,16 @@ server
 
 
 server.get('/movies/top', function (req, res, next) {
-  movies.allMovies().then(function(m) { res.send(m); });
+  movies.allMovies()
+    .then(function(m) { res.send(m); })
+    .catch(function(err) { res.send(500, err) });
 })
 
 server.post('/movies/like', function(req, res, next) {
   console.log(req.body);
-  res.send("OK");
+  movies.voteUp(req.body.id, req.body.user_id)
+  .then(function(m) { console.log(m); res.send(m); })
+  .catch(function(err) { console.log(err); res.send(500, err) });
 });
 
 server.get('/genres/all', function (req, res, next) {
